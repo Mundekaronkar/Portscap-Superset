@@ -1,0 +1,69 @@
+slice_name: Report
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 233__table
+  viz_type: table
+  slice_id: 178
+  query_mode: raw
+  groupby: []
+  time_grain_sqla: P1D
+  temporal_columns_lookup:
+    last_run_date: true
+    need_by_date: true
+    stock_out_date: true
+    trigger_date: true
+  all_columns:
+  - item
+  - description
+  - org
+  - last_run_date
+  - bu
+  - uom
+  - supplier
+  - buyer
+  - lt
+  - planner_code
+  - min_qty
+  - max_qty
+  - main_oh
+  - supply_qty
+  - order_qty
+  - need_by_date
+  - min_max_triggered
+  - trigger_date
+  - team
+  - max_not_covered
+  - min_not_covered
+  - ageing
+  - stock_out_date
+  - stock_out_ageing
+  - coverage_perc
+  - comment
+  - critical
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    expressionType: SIMPLE
+    operator: TEMPORAL_RANGE
+    subject: last_run_date
+  order_by_cols: []
+  row_limit: 1000
+  server_page_length: 10
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: false
+  color_pn: false
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards: []
+query_context: '{"datasource":{"id":233,"type":"table"},"force":false,"queries":[{"filters":[{"col":"last_run_date","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":["item","description","org","last_run_date","bu","uom","supplier","buyer","lt","planner_code","min_qty","max_qty","main_oh","supply_qty","order_qty","need_by_date","min_max_triggered","trigger_date","team","max_not_covered","min_not_covered","ageing","stock_out_date","stock_out_ageing","coverage_perc","comment","critical"],"orderby":[],"annotation_layers":[],"row_limit":1000,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[]}],"form_data":{"datasource":"233__table","viz_type":"table","slice_id":178,"query_mode":"raw","groupby":[],"time_grain_sqla":"P1D","temporal_columns_lookup":{"last_run_date":true,"need_by_date":true,"stock_out_date":true,"trigger_date":true},"all_columns":["item","description","org","last_run_date","bu","uom","supplier","buyer","lt","planner_code","min_qty","max_qty","main_oh","supply_qty","order_qty","need_by_date","min_max_triggered","trigger_date","team","max_not_covered","min_not_covered","ageing","stock_out_date","stock_out_ageing","coverage_perc","comment","critical"],"percent_metrics":[],"adhoc_filters":[{"clause":"WHERE","comparator":"No
+  filter","expressionType":"SIMPLE","operator":"TEMPORAL_RANGE","subject":"last_run_date"}],"order_by_cols":[],"row_limit":1000,"server_page_length":10,"order_desc":true,"table_timestamp_format":"smart_date","show_cell_bars":false,"color_pn":false,"conditional_formatting":[],"extra_form_data":{},"dashboards":[],"force":false,"result_format":"json","result_type":"full","include_time":false},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 76d4a352-77ce-4655-8564-6943b1cd8354
+version: 1.0.0
+dataset_uuid: 6264605a-b19b-4010-b737-bd98fce2f73d

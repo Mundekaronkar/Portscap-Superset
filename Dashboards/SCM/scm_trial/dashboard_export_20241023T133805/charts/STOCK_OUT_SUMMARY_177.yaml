@@ -1,0 +1,218 @@
+slice_name: STOCK OUT SUMMARY
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 232__table
+  viz_type: table
+  query_mode: aggregate
+  groupby:
+  - buyer
+  time_grain_sqla: P1D
+  temporal_columns_lookup:
+    need_by_date: true
+    last_run_date: true
+    stock_out_date: true
+    trigger_date: true
+  metrics:
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: usual
+      description: null
+      expression: ''
+      filterable: true
+      groupby: true
+      id: 1673
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: INTEGER
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    aggregate: SUM
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: MIN MAX STOCK OUT
+    optionName: metric_8gsnwhkcsna_ity5ll441og
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: usual_ageing
+      description: null
+      expression: ''
+      filterable: true
+      groupby: true
+      id: 1674
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: INTEGER
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    aggregate: MAX
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: MAX AGEING OF MIN MAX STOCK OUT
+    optionName: metric_oz800ho8bt_6go7lvq00lg
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: e_stock
+      description: null
+      expression: ''
+      filterable: true
+      groupby: true
+      id: 1671
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: INTEGER
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    aggregate: SUM
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: E-STORE STOCKOUT
+    optionName: metric_8t809fctoho_cfo4kqkzb8l
+  - expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: e_ageing
+      description: null
+      expression: ''
+      filterable: true
+      groupby: true
+      id: 1672
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: INTEGER
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    aggregate: MAX
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: MAX AGEING OF E-STORE STOCKOUT
+    optionName: metric_e02q8hz1si8_iyxvv9ez5n
+  - expressionType: SQL
+    sqlExpression: sum(usual)+sum(e_stock)
+    column: null
+    aggregate: null
+    datasourceWarning: false
+    hasCustomLabel: true
+    label: TOTAL
+    optionName: metric_4sjgtkotp19_ulpk1swf0cr
+  all_columns:
+  - id
+  - item
+  - description
+  - last_run_date
+  - bu
+  - uom
+  - supplier
+  - buyer
+  - lt
+  - planner_code
+  - min_qty
+  - max_qty
+  - main_oh
+  - supply_qty
+  - order_qty
+  - need_by_date
+  - min_max_triggered
+  - team
+  - max_not_covered
+  - min_not_covered
+  - coverage_perc
+  - comment
+  - critical
+  - trigger_date
+  - stock_out_date
+  - stock_out_ageing
+  - org
+  - ageing
+  - e_stock
+  - e_ageing
+  - usual
+  - usual_ageing
+  percent_metrics: []
+  adhoc_filters:
+  - clause: WHERE
+    subject: last_run_date
+    operator: TEMPORAL_RANGE
+    comparator: No filter
+    expressionType: SIMPLE
+  timeseries_limit_metric:
+    expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: buyer
+      description: null
+      expression: ''
+      filterable: true
+      groupby: true
+      id: 1650
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: STRING
+      type_generic: 1
+      verbose_name: null
+      warning_markdown: null
+    aggregate: MIN
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: false
+    label: MIN(buyer)
+    optionName: metric_zbngv5hcjai_mm0m43m4tl
+  order_by_cols: []
+  row_limit: 1000
+  server_page_length: 10
+  order_desc: false
+  show_totals: true
+  table_timestamp_format: smart_date
+  show_cell_bars: false
+  color_pn: false
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards: []
+query_context: '{"datasource":{"id":232,"type":"table"},"force":false,"queries":[{"filters":[{"col":"last_run_date","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":["buyer"],"metrics":[{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual","description":null,"expression":"","filterable":true,"groupby":true,"id":1673,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MIN
+  MAX STOCK OUT","optionName":"metric_8gsnwhkcsna_ity5ll441og"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1674,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF MIN MAX STOCK OUT","optionName":"metric_oz800ho8bt_6go7lvq00lg"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_stock","description":null,"expression":"","filterable":true,"groupby":true,"id":1671,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"E-STORE
+  STOCKOUT","optionName":"metric_8t809fctoho_cfo4kqkzb8l"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1672,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF E-STORE STOCKOUT","optionName":"metric_e02q8hz1si8_iyxvv9ez5n"},{"expressionType":"SQL","sqlExpression":"sum(usual)+sum(e_stock)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"TOTAL","optionName":"metric_4sjgtkotp19_ulpk1swf0cr"}],"orderby":[[{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"buyer","description":null,"expression":"","filterable":true,"groupby":true,"id":1650,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"STRING","type_generic":1,"verbose_name":null,"warning_markdown":null},"aggregate":"MIN","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"MIN(buyer)","optionName":"metric_zbngv5hcjai_mm0m43m4tl"},true]],"annotation_layers":[],"row_limit":1000,"series_limit":0,"series_limit_metric":{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"buyer","description":null,"expression":"","filterable":true,"groupby":true,"id":1650,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"STRING","type_generic":1,"verbose_name":null,"warning_markdown":null},"aggregate":"MIN","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"MIN(buyer)","optionName":"metric_zbngv5hcjai_mm0m43m4tl"},"order_desc":false,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[]},{"filters":[{"col":"last_run_date","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":[],"metrics":[{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual","description":null,"expression":"","filterable":true,"groupby":true,"id":1673,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MIN
+  MAX STOCK OUT","optionName":"metric_8gsnwhkcsna_ity5ll441og"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1674,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF MIN MAX STOCK OUT","optionName":"metric_oz800ho8bt_6go7lvq00lg"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_stock","description":null,"expression":"","filterable":true,"groupby":true,"id":1671,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"E-STORE
+  STOCKOUT","optionName":"metric_8t809fctoho_cfo4kqkzb8l"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1672,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF E-STORE STOCKOUT","optionName":"metric_e02q8hz1si8_iyxvv9ez5n"},{"expressionType":"SQL","sqlExpression":"sum(usual)+sum(e_stock)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"TOTAL","optionName":"metric_4sjgtkotp19_ulpk1swf0cr"}],"annotation_layers":[],"row_limit":0,"row_offset":0,"series_limit":0,"series_limit_metric":{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"buyer","description":null,"expression":"","filterable":true,"groupby":true,"id":1650,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"STRING","type_generic":1,"verbose_name":null,"warning_markdown":null},"aggregate":"MIN","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"MIN(buyer)","optionName":"metric_zbngv5hcjai_mm0m43m4tl"},"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[]}],"form_data":{"datasource":"232__table","viz_type":"table","query_mode":"aggregate","groupby":["buyer"],"time_grain_sqla":"P1D","temporal_columns_lookup":{"need_by_date":true,"last_run_date":true,"stock_out_date":true,"trigger_date":true},"metrics":[{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual","description":null,"expression":"","filterable":true,"groupby":true,"id":1673,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MIN
+  MAX STOCK OUT","optionName":"metric_8gsnwhkcsna_ity5ll441og"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"usual_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1674,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF MIN MAX STOCK OUT","optionName":"metric_oz800ho8bt_6go7lvq00lg"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_stock","description":null,"expression":"","filterable":true,"groupby":true,"id":1671,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"E-STORE
+  STOCKOUT","optionName":"metric_8t809fctoho_cfo4kqkzb8l"},{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"e_ageing","description":null,"expression":"","filterable":true,"groupby":true,"id":1672,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"INTEGER","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"MAX","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"MAX
+  AGEING OF E-STORE STOCKOUT","optionName":"metric_e02q8hz1si8_iyxvv9ez5n"},{"expressionType":"SQL","sqlExpression":"sum(usual)+sum(e_stock)","column":null,"aggregate":null,"datasourceWarning":false,"hasCustomLabel":true,"label":"TOTAL","optionName":"metric_4sjgtkotp19_ulpk1swf0cr"}],"all_columns":["id","item","description","last_run_date","bu","uom","supplier","buyer","lt","planner_code","min_qty","max_qty","main_oh","supply_qty","order_qty","need_by_date","min_max_triggered","team","max_not_covered","min_not_covered","coverage_perc","comment","critical","trigger_date","stock_out_date","stock_out_ageing","org","ageing","e_stock","e_ageing","usual","usual_ageing"],"percent_metrics":[],"adhoc_filters":[{"clause":"WHERE","subject":"last_run_date","operator":"TEMPORAL_RANGE","comparator":"No
+  filter","expressionType":"SIMPLE"}],"timeseries_limit_metric":{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"buyer","description":null,"expression":"","filterable":true,"groupby":true,"id":1650,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"STRING","type_generic":1,"verbose_name":null,"warning_markdown":null},"aggregate":"MIN","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"MIN(buyer)","optionName":"metric_zbngv5hcjai_mm0m43m4tl"},"order_by_cols":[],"row_limit":1000,"server_page_length":10,"order_desc":false,"show_totals":true,"table_timestamp_format":"smart_date","show_cell_bars":false,"color_pn":false,"conditional_formatting":[],"extra_form_data":{},"dashboards":[],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 63ea96d5-5825-45df-8eaa-863316ace2f0
+version: 1.0.0
+dataset_uuid: d8a22016-ff3b-4990-8950-37960c82257b

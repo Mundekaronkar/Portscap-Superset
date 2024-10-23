@@ -1,0 +1,13 @@
+database_name: eklavya-dwh
+sqlalchemy_uri: postgresql+psycopg2://nifi-user:XXXXXXXXXX@172.20.10.36:5432/eklavya-dwh
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  allows_virtual_table_explore: true
+uuid: 3ef876f0-2d5b-4e7e-9346-3687b9067dbd
+version: 1.0.0

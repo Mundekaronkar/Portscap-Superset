@@ -1,0 +1,464 @@
+table_name: getStockOutSummaryReport
+main_dttm_col: last_run_date
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: reports
+sql: "select\r\n\t\tmmr.id,\r\n\t\tmmr.item,\r\n\t\tdescription,\r\n\t\tlast_run_date,\r\
+  \n\t\tbu,\r\n\t\tuom,\r\n\t\tsupplier,\r\n\t    buyer,\r\n\t\tlt,\r\n\t\tplanner_code,\r\
+  \n\t\tmin_qty,\r\n\t\tmax_qty,\r\n\t\tCOALESCE(main_oh, 0) AS main_oh,\r\n\t\tsupply_qty,\r\
+  \n\t\torder_qty,\r\n\t\tneed_by_date,\r\n\t\tmin_max_triggered,\r\n\t\tteam,\r\n\
+  \t\tmax_not_covered,\r\n\t\tmin_not_covered,\r\n\t\tcoverage_perc,\r\n\t\tmmri.\"\
+  comment\" ,\r\n\t\tcritical,\r\n\t\tmmr.trigger_date,\r\n\t\tstock_out_date,\r\n\
+  \t\tstock_out_ageing,\r\n\t\tmmr.org,\r\n\t\tageing,\r\n\t\tCASE WHEN planner_code\
+  \ LIKE '%\\_E' ESCAPE '\\' OR planner_code = 'ESTORE' THEN 1 ELSE 0 END AS e_stock,\r\
+  \n\t    CASE WHEN planner_code LIKE '%\\_E' ESCAPE '\\' OR planner_code = 'ESTORE'\
+  \ THEN stock_out_ageing ELSE 0 END AS e_ageing,\r\n\t    CASE WHEN planner_code\
+  \ IS NULL THEN 1\r\n\t         WHEN planner_code NOT LIKE '%\\_E' ESCAPE '\\' AND\
+  \ planner_code != 'ESTORE' THEN 1 \r\n\t         ELSE 0 END AS usual,\r\n\t    CASE\
+  \ WHEN planner_code IS NULL THEN stock_out_ageing\r\n\t         WHEN planner_code\
+  \ NOT LIKE '%\\_E' ESCAPE '\\' AND planner_code != 'ESTORE' THEN stock_out_ageing\
+  \ \r\n\t         ELSE 0 END AS usual_ageing\r\n\t    from reports.min_max_report\
+  \ mmr \r\n\t    left join reports.min_max_report_inputs mmri \r\n\t\ton mmr.trigger_date\
+  \  = mmri.trigger_date and mmr.org =mmri.org and mmr.item = mmri.item\r\n\t    where\
+  \ (mmr.main_oh = 0 or mmr.main_oh is null) and mmr.last_update_date in (select max(last_update_date)\
+  \ from reports.min_max_report mmr);"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: d8a22016-ff3b-4990-8950-37960c82257b
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: buyer
+  verbose_name: BUYER NAME
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: min_max_triggered
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BOOLEAN
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: last_run_date
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATETIME
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: need_by_date
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATETIME
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: stock_out_date
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: trigger_date
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: max_not_covered
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: min_not_covered
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: coverage_perc
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: main_oh
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: max_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: order_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: min_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: supply_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: stock_out_ageing
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: usual_ageing
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: e_ageing
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: e_stock
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: ageing
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: usual
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: lt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: planner_code
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: critical
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: team
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: bu
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: description
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: comment
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: supplier
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: item
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: org
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+- column_name: uom
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra:
+    warning_markdown: null
+version: 1.0.0
+database_uuid: 3ef876f0-2d5b-4e7e-9346-3687b9067dbd
