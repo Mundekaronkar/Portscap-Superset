@@ -1,0 +1,47 @@
+slice_name: Revised Min-Max Quantity
+description: null
+certified_by: null
+certification_details: null
+viz_type: table
+params:
+  datasource: 234__table
+  viz_type: table
+  slice_id: 179
+  query_mode: raw
+  groupby: []
+  time_grain_sqla: P1D
+  temporal_columns_lookup: {}
+  metrics: []
+  all_columns:
+  - item
+  - org
+  - min_qty
+  - max_qty
+  - main_oh
+  - min_qty_fc
+  - max_qty_fc
+  - min_qty_cons
+  - max_qty_cons
+  - min_qty_six
+  - max_qty_six
+  - min_qty_three
+  - max_qty_three
+  - need_to_revise_min_qty
+  - need_to_revise_max_qty
+  percent_metrics: []
+  adhoc_filters: []
+  order_by_cols: []
+  row_limit: 1000
+  server_page_length: 10
+  order_desc: true
+  table_timestamp_format: smart_date
+  show_cell_bars: false
+  color_pn: false
+  conditional_formatting: []
+  extra_form_data: {}
+  dashboards: []
+query_context: '{"datasource":{"id":234,"type":"table"},"force":false,"queries":[{"filters":[],"extras":{"time_grain_sqla":"P1D","having":"","where":""},"applied_time_extras":{},"columns":["item","org","min_qty","max_qty","main_oh","min_qty_fc","max_qty_fc","min_qty_cons","max_qty_cons","min_qty_six","max_qty_six","min_qty_three","max_qty_three","need_to_revise_min_qty","need_to_revise_max_qty"],"orderby":[],"annotation_layers":[],"row_limit":1000,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"post_processing":[]}],"form_data":{"datasource":"234__table","viz_type":"table","slice_id":179,"query_mode":"raw","groupby":[],"time_grain_sqla":"P1D","temporal_columns_lookup":{},"metrics":[],"all_columns":["item","org","min_qty","max_qty","main_oh","min_qty_fc","max_qty_fc","min_qty_cons","max_qty_cons","min_qty_six","max_qty_six","min_qty_three","max_qty_three","need_to_revise_min_qty","need_to_revise_max_qty"],"percent_metrics":[],"adhoc_filters":[],"order_by_cols":[],"row_limit":1000,"server_page_length":10,"order_desc":true,"table_timestamp_format":"smart_date","show_cell_bars":false,"color_pn":false,"conditional_formatting":[],"extra_form_data":{},"dashboards":[],"force":false,"result_format":"json","result_type":"full","include_time":false},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: f3399f7c-dd07-48b1-8813-231218194871
+version: 1.0.0
+dataset_uuid: 4ca9b06e-1415-4e13-8338-af8f9c86d9b0

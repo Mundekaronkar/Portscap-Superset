@@ -1,0 +1,13 @@
+database_name: Portescap-eklavya
+sqlalchemy_uri: postgresql+psycopg2://nifi-user:XXXXXXXXXX@172.20.10.36:5432/eklavya-main
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  allows_virtual_table_explore: true
+uuid: ceec104c-8415-41c1-9c92-d9828d9322fa
+version: 1.0.0

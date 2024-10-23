@@ -1,0 +1,322 @@
+table_name: getMinMaxVariance
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: reports
+sql: "SELECT DISTINCT \r\n    mmr.item,\r\n    mmr.org,\r\n    mmr.lt,\r\n    mmr.min_qty,\r\
+  \n    mmr.max_qty,\r\n    mmr.main_oh,\r\n    mmr.uom,\r\n    dk.item as dk_item,\r\
+  \n    dk.three_months,\r\n    dk.six_months,\r\n    dk.twelve_months_cons,\r\n \
+  \   dk.twelve_month_fc,\r\n    CAST(((mmr.lt + 10) * (dk.twelve_month_fc / 12 /\
+  \ 25)) AS NUMERIC(20,3)) AS min_qty_fc,\r\n    CAST((mmr.lt * 2 * (dk.twelve_month_fc\
+  \ / 12 / 25)) AS NUMERIC(20,3)) AS max_qty_fc,\r\n    CAST(((mmr.lt + 10) * (dk.twelve_months_cons\
+  \ / 12 / 25)) AS NUMERIC(20,3)) AS min_qty_cons,\r\n    CAST((mmr.lt * 2 * (dk.twelve_months_cons\
+  \ / 12 / 25)) AS NUMERIC(20,3)) AS max_qty_cons,\r\n    CAST(((mmr.lt + 10) * (dk.six_months\
+  \ / 6 / 25)) AS NUMERIC(20,3)) AS min_qty_six,\r\n    CAST((mmr.lt * 2 * (dk.six_months\
+  \ / 6 / 25)) AS NUMERIC(20,3)) AS max_qty_six,\r\n    CAST(((mmr.lt + 10) * (dk.three_months\
+  \ / 3 / 25)) AS NUMERIC(20,3)) AS min_qty_three,\r\n    CAST((mmr.lt * 2 * (dk.three_months\
+  \ / 3 / 25)) AS NUMERIC(20,3)) AS max_qty_three,\r\n    CASE \r\n        WHEN ABS(CAST(((mmr.lt\
+  \ + 10) * (dk.twelve_month_fc / 12 / 25)) AS NUMERIC(20,3)) - mmr.min_qty) / mmr.min_qty\
+  \ >= 0.2 THEN 'Yes'\r\n        WHEN ABS(CAST(((mmr.lt + 10) * (dk.twelve_months_cons\
+  \ / 12 / 25)) AS NUMERIC(20,3)) - mmr.min_qty) / mmr.min_qty >= 0.2 THEN 'Yes'\r\
+  \n        WHEN ABS(CAST(((mmr.lt + 10) * (dk.six_months / 6 / 25)) AS NUMERIC(20,3))\
+  \ - mmr.min_qty) / mmr.min_qty >= 0.2 THEN 'Yes'\r\n        WHEN ABS(CAST(((mmr.lt\
+  \ + 10) * (dk.three_months / 3 / 25)) AS NUMERIC(20,3)) - mmr.min_qty) / mmr.min_qty\
+  \ >= 0.2 THEN 'Yes'\r\n        ELSE 'No'\r\n    END AS need_to_revise_min_qty,\r\
+  \n    CASE \r\n        WHEN ABS(CAST((mmr.lt * 2 * (dk.twelve_month_fc / 12 / 25))\
+  \ AS NUMERIC(20,3)) - mmr.max_qty) / mmr.max_qty >= 0.2 THEN 'Yes'\r\n        WHEN\
+  \ ABS(CAST((mmr.lt * 2 * (dk.twelve_months_cons / 12 / 25)) AS NUMERIC(20,3)) -\
+  \ mmr.max_qty) / mmr.max_qty >= 0.2 THEN 'Yes'\r\n        WHEN ABS(CAST((mmr.lt\
+  \ * 2 * (dk.six_months / 6 / 25)) AS NUMERIC(20,3)) - mmr.max_qty) / mmr.max_qty\
+  \ >= 0.2 THEN 'Yes'\r\n        WHEN ABS(CAST((mmr.lt * 2 * (dk.three_months / 3\
+  \ / 25)) AS NUMERIC(20,3)) - mmr.max_qty) / mmr.max_qty >= 0.2 THEN 'Yes'\r\n  \
+  \      ELSE 'No'\r\n    END AS need_to_revise_max_qty\r\nFROM \r\n    reports.min_max_report\
+  \ mmr \r\nJOIN \r\n    reports.dynamic_kanban dk \r\nON \r\n    mmr.item = dk.item\
+  \ \r\n    AND mmr.org = dk.org_name \r\nWHERE \r\n    mmr.last_update_date IN (SELECT\
+  \ MAX(last_update_date) FROM reports.min_max_report mmr);"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 4ca9b06e-1415-4e13-8338-af8f9c86d9b0
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: max_qty_fc
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: max_qty_cons
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: max_qty_three
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: max_qty_six
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: twelve_month_fc
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: twelve_months_cons
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: min_qty_fc
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: min_qty_cons
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: min_qty_three
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: min_qty_six
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: main_oh
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: max_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: three_months
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: six_months
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: min_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: lt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: INTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: need_to_revise_max_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: need_to_revise_min_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: dk_item
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: item
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: org
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: uom
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: 3ef876f0-2d5b-4e7e-9346-3687b9067dbd

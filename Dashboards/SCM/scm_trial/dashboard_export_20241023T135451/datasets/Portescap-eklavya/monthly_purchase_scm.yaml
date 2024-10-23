@@ -1,0 +1,364 @@
+table_name: monthly_purchase_scm
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: null
+sql: "with plan as (\r\nselect\r\n\tmonth,\r\n\tyear,\r\n\torg,\r\n\tbu,\r\n\tupper(buyer_name)\
+  \ as buyer_name ,\r\n\tsum(buyers_commitment_qty) as buyers_commitment_qty ,\r\n\
+  \tsum(system_generated_price_usd) as system_generated_price_usd,\r\n\t(sum(buyers_commitment_qty)*\
+  \ sum(system_generated_price_usd))/ 1000 as plan\r\nfrom\r\n\treports.monthly_gross_req_report_inputs\
+  \ mgrri\r\ngroup by\r\n\t1,\r\n\t2,\r\n\t3,\r\n\t4,\r\n\t5\r\n)\r\n,actual as\r\n\
+  (\r\nselect\r\nto_char(date,'Month')  as month,\r\nextract(year from date) as year,\r\
+  \norganization ,\r\nbu,\r\nbuyer,\r\nsum(actual_total) as actual\r\nfrom\r\n( \r\
+  \nselect coalesce(a.value_usd,0) as value_usd,\r\ncoalesce (a.part_number,b.part_number)\
+  \ as part_number,\r\ncoalesce(a.date,b.creation_date ) as date,\r\ncoalesce (a.organization,b.organisation)\
+  \ as organization,\r\ncoalesce(a.bu,b.unit) as bu,\r\ncoalesce(a.buyer,b.buyer)\
+  \ as buyer\r\n,coalesce (b.invoice_value_usd,0) as invoice_value_usd,\r\ncoalesce(value_usd,0)\
+  \ + coalesce(b.invoice_value_usd,0) as actual_total\r\nfrom\r\n\t(\r\n\tselect\r\
+  \n\t\tapdtd.value_usd ,\r\n\t\tapdtd.part_number,\r\n\t\tcast(afd.date as date)\
+  \ as date,\r\n\t\tafd.organization,\r\n\t\tafd.bu,\r\n\t\tafd.created_by,\r\n\t\t\
+  upper(concat(last_name, ', ', first_name)) as buyer,\r\n\t\tisu.first_name ,\r\n\
+  \t\tisu.last_name\r\n\tfrom\r\n\t\tapproval_form_dev.awb_part_details_table_data\
+  \ apdtd\r\n\tleft join approval_form_dev.awb_form_data afd\r\n        on\r\n\t\t\
+  apdtd.form_request_id = afd.form_request_id\r\n\tleft join bodhee.iam_security_user\
+  \ isu\r\n        on\r\n\t\tapdtd.created_by = isu.id)a\r\n\tfull outer join \r\n\
+  \t(select part_number,organisation,cast(creation_date as date) as creation_date,unit,buyer\r\
+  \n\t,sum(invoice_value_usd) as invoice_value_usd from\r\n\t(select ls.part_number,ls.organisation,ls.quantity,ls.creation_date,st.airway_bill_no,st.delivery_date,st.unit,st.buyer,st.invoice_value_usd\r\
+  \n\tfrom scm.local_shipment ls \r\n\tleft join scm.shipment_tracker st\r\n\ton ls.id_foreign_key\
+  \ = st.id)a\r\n\tgroup by 1,2,3,4,5)b\r\n\ton a.organization = b.organisation\r\n\
+  \tand a.bu = b.unit\r\n\tand a.date = b.creation_date\r\n\tand a.part_number = b.part_number\r\
+  \n\tand a.buyer = b.buyer\t\r\n)a\r\ngroup by 1,2,3,4,5)\r\n,additional as (\r\n\
+  select cast(year as varchar) as year,month,organization,bu,buyer,sum(value) as additional\
+  \ from\r\n(select pptd.*,upper(concat(isu.last_name, ', ', isu.first_name)) as buyer\r\
+  \n,trim(to_char(pptd.creation_date,'Month')) as month\r\n,extract (year from pptd.creation_date)\
+  \ as year\r\nfrom approval_form_dev.purchase_plan_table_data pptd \r\nleft join\
+  \ bodhee.iam_security_user isu\r\non pptd.created_by = isu.id)a\r\ngroup by 1,2,3,4,5\r\
+  \n)\r\n,awb as (\r\nselect year,month,organization,bu,buyer,sum(coalesce(value_usd,0))\
+  \ as awb_value_usd,count(distinct awb_no) awb_cnt\r\nfrom\r\n(\r\nselect apdtd.form_request_id,afd.awb_no,apdtd.part_number,afd.organization,afd.bu,afd.date\r\
+  \n,apdtd.created_by,apdtd.value_usd,fr.current_status,rtws.step_name\r\n,upper(concat(isu.last_name,\
+  \ ', ', isu.first_name)) as buyer\r\n,trim(to_char(cast(afd.date as date),'Month'))\
+  \ as month\r\n,extract(year from cast(afd.date as date)) as year\r\nfrom approval_form_dev.awb_part_details_table_data\
+  \ apdtd\r\nleft join approval_form_dev.awb_form_data afd \r\non apdtd.form_request_id\
+  \ = afd.form_request_id\r\nleft join approval_form_dev.form_request fr \r\non apdtd.form_request_id\
+  \ = fr.id\r\nleft join approval_form_dev.request_type_workflow_step rtws\r\non fr.current_status\
+  \ = rtws.id\r\nleft join bodhee.iam_security_user isu \r\non isu.id = apdtd.created_by\
+  \ \r\nwhere rtws.step_name ilike 'END'\r\nand fr.last_action <> 0)a\r\ngroup by\
+  \ 1,2,3,4,5\r\n)\r\n,scm_invoice as (select awb_inv.organization,awb_inv.bu,awb_inv.month,awb_inv.year\r\
+  \n,i.invoice_no,i.awb_no,i.pickup_date,i.delivery_date\r\n,upper(concat(isu.last_name,\
+  \ ', ', isu.first_name)) as buyer\r\n,is2.invoice_no as is_invoice_no\r\n,is2.recevied_by\
+  \  as is_received_by,is2.delivery_date as is_delivery_date\r\n--,awb_inv.created_by,i.created_by\r\
+  \nfrom\r\n(select apdtd.invoice_number\r\n,afd.organization,afd.bu,afd.date\r\n\
+  ,apdtd.created_by\r\n,trim(to_char(cast(afd.date as date),'Month')) as month\r\n\
+  ,extract(year from cast(afd.date as date)) as year\r\nfrom approval_form_dev.awb_part_details_table_data\
+  \ apdtd\r\nleft join approval_form_dev.awb_form_data afd \r\non apdtd.form_request_id\
+  \ = afd.form_request_id)awb_inv\r\nleft join scm.invoice i\r\non awb_inv.invoice_number\
+  \ = i.invoice_no\r\nleft join bodhee.iam_security_user isu \r\non awb_inv.created_by\
+  \ = isu.id\r\nleft join scm.invoice_security is2 \r\non awb_inv.invoice_number =\
+  \ is2.invoice_no\r\n)\r\n,awaiting_pick_up as (\r\nselect year,month,organization,bu,buyer,count(invoice_no)\
+  \ as cnt_invoice_no from\r\n(select * from scm_invoice\r\nwhere pickup_date > current_date\
+  \ or pickup_date is null)a\r\ngroup by 1,2,3,4,5\r\n)\r\n,intransit as (\r\nselect\
+  \ year,month,organization,bu,buyer,count(invoice_no) as cnt_intransit from\r\n(select\
+  \ * from scm_invoice\r\nwhere pickup_date < current_date and delivery_date is null)a\r\
+  \ngroup by 1,2,3,4,5\r\n)\r\n,security as (\r\nselect year,month,organization,bu,buyer,count(invoice_no)\
+  \ as cnt_security from\r\n(select * from scm_invoice\r\nwhere is_received_by is\
+  \ null and is_delivery_date is not null)a\r\ngroup by 1,2,3,4,5\r\n)\r\n--select\
+  \ * from scm_invoice\r\n--where is_received_by is not null and is_delivery_date\
+  \ is not null;\r\n,store as(\r\nselect organization,bu,month,year,buyer,count(is_invoice_no)\
+  \ as cnt_store from\r\n(select a.organization,a.bu,a.month,a.year,a.buyer,a.is_invoice_no,a.is_received_by,a.is_delivery_date,\r\
+  \nst.is_gir_done,st.gir_date from\r\n(select * from scm_invoice\r\nwhere is_received_by\
+  \ is not null and is_delivery_date is not null)a\r\nleft join scm.shipment_tracker\
+  \ st \r\non a.is_invoice_no = st.invoice_no\r\nwhere st.is_gir_done <> true  or\
+  \ gir_date is null)a\r\ngroup by 1,2,3,4,5\r\n)\r\n--select * from store;\r\n--select\
+  \ * from scm.shipment_tracker st\r\nselect coalesce(plan.month,additional.month)\
+  \ as month,\r\nEXTRACT(MONTH FROM TO_DATE(coalesce(plan.month,additional.month),\
+  \ 'Month')) AS month_number,\r\ncoalesce(plan.year,additional.year) as year,\r\n\
+  coalesce(plan.org,additional.organization) as organization,\r\ncoalesce(plan.bu,additional.bu)\
+  \ as bu,\r\ncoalesce(plan.buyer_name,additional.buyer) as buyer,\r\nplan.buyers_commitment_qty,\r\
+  \nplan.plan\r\n,actual.actual,additional.additional,awb.awb_value_usd \r\n,awb.awb_cnt\r\
+  \n,apu.cnt_invoice_no\r\n,apu.cnt_invoice_no*awb_value_usd as apu_value\r\n,intransit.cnt_intransit\
+  \ \r\n,intransit.cnt_intransit * awb_value_usd as intransit_value\r\n,security.cnt_security\r\
+  \n,security.cnt_security * awb_value_usd as security_value\r\n,store.cnt_store\r\
+  \n,store.cnt_store * awb_value_usd as store_value\r\nfrom plan\r\nleft join actual\r\
+  \non plan.year = cast(actual.year as varchar)\r\nand plan.month = cast(actual.month\
+  \ as varchar)\r\nand plan.org = actual.organization\r\nand plan.bu = actual.bu\r\
+  \nand plan.buyer_name = actual.buyer\r\nfull outer join additional\r\non plan.year\
+  \ = cast(additional.year as varchar)\r\nand plan.month = cast(additional.month as\
+  \ varchar)\r\nand plan.org = additional.organization\r\nand plan.bu = additional.bu\r\
+  \nand plan.buyer_name= additional.buyer\r\nleft join awb \r\non plan.year = cast(awb.year\
+  \ as varchar)\r\nand plan.month = cast(awb.month as varchar)\r\nand plan.org = awb.organization\r\
+  \nand plan.bu = awb.bu\r\nand plan.buyer_name = awb.buyer\r\nleft join awaiting_pick_up\
+  \ apu\r\non plan.year = cast(apu.year as varchar)\r\nand plan.month = cast(apu.month\
+  \ as varchar)\r\nand plan.org = apu.organization\r\nand plan.bu = apu.bu\r\nand\
+  \ plan.buyer_name = apu.buyer\r\nleft join intransit \r\non plan.year = cast(intransit.year\
+  \ as varchar)\r\nand plan.month = cast(intransit.month as varchar)\r\nand plan.org\
+  \ = intransit.organization\r\nand plan.bu = intransit.bu\r\nand plan.buyer_name\
+  \ = intransit.buyer\r\nleft join security \r\non plan.year = cast(security.year\
+  \ as varchar)\r\nand plan.month = cast(security.month as varchar)\r\nand plan.org\
+  \ = security.organization\r\nand plan.bu = security.bu\r\nand plan.buyer_name =\
+  \ security.buyer\r\nleft join store \r\non plan.year = cast(store.year as varchar)\r\
+  \nand plan.month = cast(store.month as varchar)\r\nand plan.org = store.organization\r\
+  \nand plan.bu = store.bu\r\nand plan.buyer_name = store.buyer\r\n;"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 1d2735a8-651d-48cd-bc37-461e44029bb4
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: buyers_commitment_qty
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: month_number
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: awb_value_usd
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: actual
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: additional
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: plan
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: organization
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: year
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: buyer
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: bu
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: month
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: intransit_value
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: apu_value
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: security_value
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: store_value
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: FLOAT
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: cnt_invoice_no
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: awb_cnt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: cnt_intransit
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: cnt_security
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: cnt_store
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: LONGINTEGER
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: {}
+version: 1.0.0
+database_uuid: ceec104c-8415-41c1-9c92-d9828d9322fa
